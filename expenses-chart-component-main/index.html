@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Expenses chart component</title>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-size: 18px;
+        font-family: "Roboto", sans-serif;
+
+        background-color: hsl(27, 66%, 92%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card {
+        width: 600px;
+        margin: 10vh auto 0 auto;
+      }
+
+      .card-header {
+        background-color: hsl(10, 79%, 65%);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 30px;
+        border-radius: 1rem;
+      }
+
+      .text {
+        margin-bottom: 15px;
+      }
+
+      .number {
+        font-size: 30px;
+      }
+
+      .text,
+      .number {
+        color: #fff;
+      }
+
+      .card-content {
+        background-color: #fff;
+        margin-top: 1.5rem;
+        border-radius: 1rem;
+        padding: 20px 30px;
+      }
+
+      .days {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        height: 150px;
+        margin: 15px 0px;
+        width: 100%;
+        position: relative;
+      }
+
+      .num-day {
+        text-align: center;
+        width: 10%;
+      }
+      .day {
+        background: hsl(15, 67%, 44%);
+        width: 120%;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        position: relative;
+      }
+      .day > i {
+        position: absolute;
+        top: -22px;
+        left: 1px;
+        background: hsl(25, 47%, 15%);
+        width: 100%;
+        height: 18px;
+        display: none;
+        color: white;
+        font-size: 0.8rem;
+      }
+      .num-day > span {
+        font-size: 0.9rem;
+        color: rgb(119, 116, 116);
+        padding-top: 5px;
+      }
+
+      .days::after {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 1px;
+        top: 165px;
+        margin: 10px auto;
+        background: rgb(220, 217, 217);
+      }
+
+      .graph {
+        margin-top: 100px;
+      }
+
+      .total {
+        color: grey;
+        font-size: 24px;
+        font-weight: 200;
+      }
+
+      .price {
+        color: hsl(25, 47%, 15%);
+        font-size: 40px;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .footer-right {
+        margin-top: 25px;
+      }
+
+      .percentage {
+        color: hsl(25, 47%, 15%);
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .month {
+        color: gray;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      @media screen and (max-width: 470px) {
+        html {
+          display: grid;
+          place-items: center;
+          height: 100%;
+        }
+
+        body {
+          padding: 0;
+          margin: 0;
+        }
+
+        .card {
+          margin: 0;
+        }
+
+        .card-header {
+          margin: 30px 20px auto 20px;
+        }
+
+        .card-content {
+          margin: 30px 20px 30px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <header class="card-header">
+        <div class="content">
+          <p class="text">My balance</p>
+          <p class="number">$921.48</p>
+        </div>
+
+        <div class="diagram">
+          <div class="circles">
+            <svg
+              width="72"
+              height="48"
+              viewBox="0 0 72 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g fill="none" fill-rule="evenodd">
+                <circle fill="#382314" cx="48" cy="24" r="24" />
+                <circle stroke="#FFF" stroke-width="2" cx="24" cy="24" r="23" />
+              </g>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <main class="card-content">
+        <div class="card-heading">
+          <h2 class="card-text" style="padding-bottom: 4rem">
+            Spending - Last 7 days
+          </h2>
+          <div class="graph">
+            <section class="days">
+              <section class="num-day">
+                <span
+                  id="amount"
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                  >$17.45</span
+                >
+                <i></i>
+                <div
+                  id="chart"
+                  class="mon day"
+                  style="height: 65px; cursor: pointer"
+                >
+                  <i></i>
+                </div>
+                <span>mon</span>
+              </section>
+              <section class="num-day">
+                <span
+                  id="amount"
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                  >$34.91</span
+                >
+                <div class="tue day" style="height: 105px; cursor: pointer">
+                  <i></i>
+                </div>
+                <span>tue</span>
+              </section>
+              <section class="num-day">
+                <span
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                  >$52.36</span
+                >
+                <div
+                  class="wed day"
+                  style="
+                    height: 200px;
+                    cursor: pointer;
+                    background-color: rgb(118, 181, 188);
+                  "
+                >
+                  <i></i>
+                </div>
+                <span>wed</span>
+              </section>
+              <section class="num-day">
+                <span
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                  >$31.07</span
+                >
+                <div class="thu day" style="height: 85px; cursor: pointer">
+                  <i></i>
+                </div>
+                <span>thu</span>
+              </section>
+              <section class="num-day">
+                <span
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                >
+                  $23.39</span
+                >
+                <div class="fri day" style="height: 70px; cursor: pointer">
+                  <i></i>
+                </div>
+                <span>fri</span>
+              </section>
+              <section class="num-day">
+                <span
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                  >$43.28</span
+                >
+                <div class="sat day" style="height: 170px; cursor: pointer">
+                  <i></i>
+                </div>
+                <span>sat</span>
+              </section>
+              <section class="num-day">
+                <span
+                  class="fig"
+                  style="
+                    font-size: 0.8rem;
+                    display: none;
+                    margin-bottom: 1rem;
+
+                    background: #3e2415;
+                    width: 100%;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 3px;
+                  "
+                  >$25.48</span
+                >
+                <div class="sun day" style="height: 90px; cursor: pointer">
+                  <i></i>
+                </div>
+                <span>sun</span>
+              </section>
+            </section>
+          </div>
+          <br /><br />
+
+          <section class="pt-3">
+            <div class="footer">
+              <div class="footer-left">
+                <h3 class="total">Total this month</h3>
+                <p class="price">$478.33</p>
+              </div>
+
+              <div class="footer-right">
+                <p class="percentage">+2.4%</p>
+                <p class="month">from last month</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+<!-- My balance $921.48 Spending - Last 7 days mon tue wed thu fri sat sun Total this
+month $478.33 +2.4% from last month -->
